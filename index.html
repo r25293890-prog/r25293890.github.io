@@ -157,6 +157,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Cormorant Infant', serif;
+            transition: 0.3s;
         }
         .btn-next-bottom:hover {
             background: #4a2e0a;
@@ -324,4 +330,71 @@
             const titleElement = document.getElementById('chapterTitle');
             const textElement = document.getElementById('storyText');
 
-            //
+            // Показываем индикатор загрузки
+            textElement.innerHTML = "<i>Загрузка главы...</i>";
+            
+            // Заголовок берем из массива и меняем в нем имя
+            const rawTitle = chapterTitles[currentChapter - 1];
+            titleElement.innerHTML = rawTitle.replace(/\[ИМЯ\]/g, userName);
+
+            // Пытаемся скачать файл (например, chapters/1.html)
+            try {
+                const response = await fetch(`chapters/${currentChapter}.html`);
+                
+                if (!response.ok) {
+                    throw new Error("Файл не найден");
+                }
+                
+                // Получаем текст из файла
+                let rawText = await response.text();
+                
+                // Заменяем имя в тексте
+                textElement.innerHTML = rawText.replace(/\[ИМЯ\]/g, userName);
+
+            } catch (error) {
+                textElement.innerHTML = `<b style="color:red;">Ошибка загрузки главы ${currentChapter}. Убедитесь, что файл chapters/${currentChapter}.html существует на GitHub.</b>`;
+            }
+
+            // Обновляем кнопки и навигацию (как раньше)
+            const songUrl = chapterSongs[currentChapter - 1];
+            document.getElementById('songButton').href = songUrl;
+
+            const prevSlot = document.getElementById('prevSlot');
+            if (currentChapter === 1) {
+                prevSlot.innerHTML = `<img src="${imageLeft}" class="nav-image" alt="Декор">`;
+            } else {
+                prevSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(-1)">← Прошлая глава</button>`;
+            }
+
+            const nextSlot = document.getElementById('nextSlot');
+            const bottomNextBtn = document.getElementById('bottomNextBtn');
+
+            if (currentChapter === totalChapters) {
+                nextSlot.innerHTML = `<img src="${imageRight}" class="nav-image" alt="Декор">`;
+                bottomNextBtn.style.display = 'none'; // Прячем кнопку внизу на последней главе
+            } else {
+                nextSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(1)">Следующая глава →</button>`;
+                bottomNextBtn.style.display = 'flex'; // Показываем кнопку на остальных главах
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function changeChapter(step) {
+            currentChapter += step;
+            loadAndRenderChapter(); // Теперь при смене вызываем функцию с загрузкой
+        }
+
+        function handleEnter(event) {
+            if (event.key === "Enter") startStory();
+        }
+
+        function resetStory() {
+            document.getElementById('nameInput').value = '';
+            document.getElementById('inputContainer').style.display = 'block';
+            document.getElementById('storyContainer').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
