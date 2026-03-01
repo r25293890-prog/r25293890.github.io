@@ -1,3 +1,14 @@
+Я обновил дизайн сайта по вашим требованиям .
+
+**Что изменилось:**
+1. Добавлена анимация загрузки (ваша гифка `ezgif-6cb858b70af2e7aa.gif` на черном фоне). Она показывается 1.5 секунды при открытии страницы, а затем плавно исчезает.
+2. Фон всей страницы заменен на картину из Метрополитен-музея (`DP809138.jpg`). Она не скроллится вместе с текстом (зафиксирована), чтобы выглядело аккуратно.
+3. Цвета блоков и кнопок заменены на предложенную вами палитру (от светло-песочного до темно-коричневого).
+4. Текст на кнопках «Следующая глава» и «Прошлая глава» сделан заметно меньше, чем остальной текст кнопок.
+
+Скопируйте этот код:
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,59 +22,105 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Marck+Script&family=Viaoda+Libre&display=swap" rel="stylesheet">
 
     <style>
-        /* Основные стили страницы */
+        /* ===================== */
+        /* ЗАСТАВКА (GIF)        */
+        /* ===================== */
+        body:before {
+            content: " ";
+            height: 100vh;
+            width: 100vw;
+            display: block;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            z-index: 9999;
+            background-color: #000; /* Подложка под гифку */
+            background-image: url("https://raw.githubusercontent.com/r25293890-prog/SpaceheyAubrie/main/ezgif-6cb858b70af2e7aa.gif");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: hideOverlay 1.5s ease 1s 1 normal forwards; /* Ждем 1 сек, потом 1.5 сек исчезает */
+            pointer-events: none;
+        }
+
+        @keyframes hideOverlay { 
+            0% { opacity: 1; } 
+            100% { opacity: 0; visibility: hidden; } 
+        } 
+
+        /* ===================== */
+        /* ОСНОВНЫЕ СТИЛИ СТРАНИЦЫ */
+        /* ===================== */
         body { 
             font-family: 'Cormorant Infant', serif; 
-            background: #f4f4f9; 
+            /* Основной фон страницы - картина из Метрополитен-музея */
+            background-image: url('https://images.metmuseum.org/CRDImages/dp/original/DP809138.jpg');
+            background-repeat: repeat-y;
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            
             max-width: 900px; 
             margin: 40px auto; 
             padding: 20px; 
-            color: #000; /* ВЕСЬ текст черный */
+            color: #000; 
             line-height: 1.6;
-            font-size: 26px; /* Увеличен основной размер текста */
+            font-size: 26px; 
         }
         
-        /* Шрифты персонажей - увеличены и цвет изменен на черный */
+        /* Шрифты персонажей */
         .char1 { font-family: 'Great Vibes', cursive; font-size: 36px; color: #000; }
         .char2 { font-family: 'Viaoda Libre', serif; font-size: 30px; color: #000; }
         .char3 { font-family: 'Marck Script', cursive; font-size: 32px; color: #000; }
 
+        /* Белые блоки с тенью заменены на цвет #D4AC77 (светло-коричневый) */
         .box { 
-            background: white; 
+            background-color: #D4AC77; 
             padding: 30px; 
             border-radius: 8px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); 
+            border: 2px solid #633F0F; /* Добавили темную рамку для контраста */
         }
 
         #storyContainer { display: none; }
 
-        /* Кнопки */
+        /* ===================== */
+        /* КНОПКИ                */
+        /* ===================== */
         button { 
             font-family: 'Cormorant Infant', serif; 
-            color: white; /* Текст на кнопках остается белым для контраста */
+            color: white; 
             border: none; 
             padding: 12px 20px; 
-            font-size: 20px; /* Немного увеличили текст кнопок */
+            font-size: 20px; 
             cursor: pointer; 
             border-radius: 4px;
             transition: 0.3s;
-            height: 50px; /* Чуть увеличили высоту кнопок под текст */
+            height: 50px; 
         }
         
-        .btn-main { background: #007bff; width: 100%; font-size: 22px; }
-        .btn-main:hover { background: #0056b3; }
+        /* Главная кнопка ввода имени - темно-коричневая */
+        .btn-main { background: #633F0F; width: 100%; font-size: 22px; }
+        .btn-main:hover { background: #4a2e0a; }
 
-        .btn-nav { background: #17a2b8; width: 100%; }
-        .btn-nav:hover { background: #138496; }
+        /* Кнопки навигации (Главы) - текст поменьше, цвет #7B674D */
+        .btn-nav { 
+            background: #7B674D; 
+            width: 100%; 
+            font-size: 16px; /* Текст навигации сделан меньше */
+            white-space: nowrap; 
+        }
+        .btn-nav:hover { background: #5c4d39; }
 
+        /* Кнопка "Песня главы" - золотистая #B68B51 */
         .btn-song { 
-            background: #9c27b0; 
+            background: #B68B51; 
             display: inline-flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             box-sizing: border-box;
-            color: white; /* Текст на кнопке остается белым */
+            color: white; 
             padding: 12px 20px; 
             font-size: 20px; 
             border-radius: 4px;
@@ -71,24 +128,32 @@
             height: 50px; 
             font-family: 'Cormorant Infant', serif;
         }
-        .btn-song:hover { background: #7b1fa2; }
+        .btn-song:hover { background: #96703f; }
         
-        .btn-back { background: #6c757d; }
-        .btn-back:hover { background: #5a6268; }
+        /* Кнопка "Ввести другое имя" - светло-песочная #D4B58A (текст черный) */
+        .btn-back { 
+            background: #D4B58A; 
+            color: #000;
+            border: 1px solid #7B674D;
+        }
+        .btn-back:hover { background: #c2a275; }
 
+        /* Поле ввода */
         input { 
             font-family: 'Cormorant Infant', serif;
             width: calc(100% - 24px); 
             padding: 12px; 
             margin-bottom: 20px; 
-            font-size: 22px; /* Увеличили текст в поле ввода */
-            border: 1px solid #ccc;
+            font-size: 22px; 
+            background: #fdfaf6; 
+            border: 2px solid #7B674D;
             border-radius: 4px;
+            color: #000;
         }
         
         h2 { margin-top: 0; font-family: 'Cormorant Infant', serif; font-size: 32px;}
 
-        /* Верстка */
+        /* Верстка верхней панели */
         .top-nav {
             display: flex;
             justify-content: space-between;
@@ -96,11 +161,11 @@
             gap: 15px;
             margin-bottom: 25px;
             padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 2px solid #7B674D; 
         }
 
         .nav-slot {
-            width: 180px;
+            width: 160px; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -117,11 +182,11 @@
 
         .chapter-title {
             text-align: center;
-            font-size: 40px; /* Увеличили заголовок главы */
+            font-size: 40px; 
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 30px;
-            color: #000; /* Заголовок тоже строго черный */
+            color: #000; 
         }
 
         #storyText { min-height: 300px; }
@@ -151,7 +216,6 @@
             <div class="nav-slot" id="prevSlot"></div>
             
             <div class="center-buttons">
-                <!-- Теперь это ссылка, которая открывается в новой вкладке -->
                 <a href="#" class="btn-song" id="songButton" target="_blank">♫ Песня главы</a>
                 <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
             </div>
@@ -204,7 +268,6 @@
         const totalChapters = 9;
         let userName = "";
 
-        // Массив ссылок на песни для каждой главы
         const chapterSongs = [
             "https://www.youtube.com/watch?v=mC9v5FaLt84&list=RDmC9v5FaLt84&start_radio=1",
             "https://www.youtube.com/watch?v=Pc4Ud2RBfQ4&list=RDPc4Ud2RBfQ4&start_radio=1",
@@ -249,7 +312,6 @@
             document.getElementById('chapterTitle').innerHTML = newTitle;
             document.getElementById('storyText').innerHTML = newText;
 
-            // Обновляем ссылку на песню для текущей главы
             const songUrl = chapterSongs[currentChapter - 1];
             document.getElementById('songButton').href = songUrl;
 
@@ -288,3 +350,4 @@
 
 </body>
 </html>
+```
