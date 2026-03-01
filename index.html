@@ -332,4 +332,41 @@
             }
 
             // Обновляем кнопки и навигацию (как раньше)
-            const songUrl
+            const songUrl = chapterSongs[currentChapter - 1];
+            document.getElementById('songButton').href = songUrl;
+
+            const prevSlot = document.getElementById('prevSlot');
+            if (currentChapter === 1) {
+                prevSlot.innerHTML = `<img src="${imageLeft}" class="nav-image" alt="Декор">`;
+            } else {
+                prevSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(-1)">← Прошлая глава</button>`;
+            }
+
+            const nextSlot = document.getElementById('nextSlot');
+            if (currentChapter === totalChapters) {
+                nextSlot.innerHTML = `<img src="${imageRight}" class="nav-image" alt="Декор">`;
+            } else {
+                nextSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(1)">Следующая глава →</button>`;
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function changeChapter(step) {
+            currentChapter += step;
+            loadAndRenderChapter(); // Теперь при смене вызываем функцию с загрузкой
+        }
+
+        function handleEnter(event) {
+            if (event.key === "Enter") startStory();
+        }
+
+        function resetStory() {
+            document.getElementById('nameInput').value = '';
+            document.getElementById('inputContainer').style.display = 'block';
+            document.getElementById('storyContainer').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
