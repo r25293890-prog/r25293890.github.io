@@ -18,15 +18,15 @@
             max-width: 900px; 
             margin: 40px auto; 
             padding: 20px; 
-            color: #333;
+            color: #000; /* ВЕСЬ текст черный */
             line-height: 1.6;
-            font-size: 20px; 
+            font-size: 26px; /* Увеличен основной размер текста */
         }
         
-        /* Шрифты персонажей */
-        .char1 { font-family: 'Great Vibes', cursive; font-size: 26px; color: #2c3e50; }
-        .char2 { font-family: 'Viaoda Libre', serif; font-size: 22px; color: #8b0000; }
-        .char3 { font-family: 'Marck Script', cursive; font-size: 24px; color: #006400; }
+        /* Шрифты персонажей - увеличены и цвет изменен на черный */
+        .char1 { font-family: 'Great Vibes', cursive; font-size: 36px; color: #000; }
+        .char2 { font-family: 'Viaoda Libre', serif; font-size: 30px; color: #000; }
+        .char3 { font-family: 'Marck Script', cursive; font-size: 32px; color: #000; }
 
         .box { 
             background: white; 
@@ -40,23 +40,22 @@
         /* Кнопки */
         button { 
             font-family: 'Cormorant Infant', serif; 
-            color: white; 
+            color: white; /* Текст на кнопках остается белым для контраста */
             border: none; 
             padding: 12px 20px; 
-            font-size: 18px; 
+            font-size: 20px; /* Немного увеличили текст кнопок */
             cursor: pointer; 
             border-radius: 4px;
             transition: 0.3s;
-            height: 46px; 
+            height: 50px; /* Чуть увеличили высоту кнопок под текст */
         }
         
-        .btn-main { background: #007bff; width: 100%; font-size: 20px; }
+        .btn-main { background: #007bff; width: 100%; font-size: 22px; }
         .btn-main:hover { background: #0056b3; }
 
         .btn-nav { background: #17a2b8; width: 100%; }
         .btn-nav:hover { background: #138496; }
 
-        /* Делаем кнопку "Песня главы" ссылкой, но выглядящей как кнопка */
         .btn-song { 
             background: #9c27b0; 
             display: inline-flex;
@@ -64,12 +63,12 @@
             justify-content: center;
             text-decoration: none;
             box-sizing: border-box;
-            color: white;
+            color: white; /* Текст на кнопке остается белым */
             padding: 12px 20px; 
-            font-size: 18px; 
+            font-size: 20px; 
             border-radius: 4px;
             transition: 0.3s;
-            height: 46px; 
+            height: 50px; 
             font-family: 'Cormorant Infant', serif;
         }
         .btn-song:hover { background: #7b1fa2; }
@@ -82,12 +81,12 @@
             width: calc(100% - 24px); 
             padding: 12px; 
             margin-bottom: 20px; 
-            font-size: 18px; 
+            font-size: 22px; /* Увеличили текст в поле ввода */
             border: 1px solid #ccc;
             border-radius: 4px;
         }
         
-        h2 { margin-top: 0; font-family: 'Cormorant Infant', serif; }
+        h2 { margin-top: 0; font-family: 'Cormorant Infant', serif; font-size: 32px;}
 
         /* Верстка */
         .top-nav {
@@ -107,7 +106,7 @@
             align-items: center;
         }
 
-        .nav-image { height: 46px; object-fit: contain; }
+        .nav-image { height: 50px; object-fit: contain; }
 
         .center-buttons {
             display: flex;
@@ -118,11 +117,11 @@
 
         .chapter-title {
             text-align: center;
-            font-size: 32px;
+            font-size: 40px; /* Увеличили заголовок главы */
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 30px;
-            color: #222;
+            color: #000; /* Заголовок тоже строго черный */
         }
 
         #storyText { min-height: 300px; }
@@ -132,7 +131,7 @@
             .center-buttons { flex-direction: column; }
             .nav-slot { width: 100%; }
             button, .btn-song { width: 100%; }
-            .chapter-title { font-size: 28px; }
+            .chapter-title { font-size: 34px; }
         }
     </style>
 </head>
@@ -170,6 +169,8 @@
         
         <div data-title="Глава 1: Встреча">
             Однажды [ИМЯ] отправился в долгое путешествие...
+            <br><br>
+            <span class="char1">"Приветствую тебя, [ИМЯ]. Я так долго ждал этой встречи..."</span>
         </div>
         <div data-title="Глава 2: Темный лес">
             Войдя в густой лес, [ИМЯ] услышал странный шорох...
