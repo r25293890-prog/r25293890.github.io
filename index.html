@@ -66,7 +66,7 @@
             border-radius: 8px; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.5); 
             border: 2px solid #633F0F; 
-            position: relative; /* Добавлено для позиционирования внутренних элементов, если понадобится */
+            position: relative; 
         }
 
         #storyContainer { display: none; }
@@ -122,7 +122,7 @@
         .btn-back:hover { background: #c2a275; }
 
         /* ===================== */
-        /* НОВАЯ КНОПКА ТЕЛЕГРАМ */
+        /* КНОПКА ТЕЛЕГРАМ       */
         /* ===================== */
         .tg-link-container {
             display: flex;
@@ -138,13 +138,13 @@
         }
         
         .tg-image-btn img {
-            height: 80px; /* Размер картинки, можно изменить */
+            height: 80px; 
             object-fit: contain;
         }
 
         .tg-image-btn:hover {
-            transform: scale(1.05); /* Легкое увеличение при наведении */
-            filter: brightness(1.1); /* Легкое осветление при наведении */
+            transform: scale(1.05); 
+            filter: brightness(1.1); 
         }
 
         input { 
@@ -197,6 +197,15 @@
         }
 
         #storyText { min-height: 300px; }
+        
+        /* Стили для картинок ВНУТРИ текста главы */
+        #storyText img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+            margin: 20px auto;
+        }
 
         @media (max-width: 768px) {
             .top-nav { flex-direction: column; align-items: stretch; }
@@ -204,7 +213,7 @@
             .nav-slot { width: 100%; }
             button, .btn-song { width: 100%; }
             .chapter-title { font-size: 34px; }
-            .tg-image-btn img { height: 60px; } /* На телефонах картинка чуть меньше */
+            .tg-image-btn img { height: 60px; } 
         }
     </style>
 </head>
@@ -232,9 +241,9 @@
         </div>
 
         <div class="chapter-title" id="chapterTitle"></div>
-        <div id="storyText"></div>
+        <div id="storyText">Загрузка...</div>
         
-        <!-- КНОПКА ТЕЛЕГРАМ ВНИЗУ БЛОКА -->
+        <!-- КНОПКА ТЕЛЕГРАМ -->
         <div class="tg-link-container">
             <a href="https://t.me/MerkhavSed" target="_blank" class="tg-image-btn" title="Перейти в Telegram">
                 <img src="https://i.ibb.co/m5V3cFQD/2026-03-01-234222464-no-bg-preview-carve-photos.png" alt="Telegram Channel">
@@ -243,46 +252,25 @@
         
     </div>
 
-    <!-- 3. ХРАНИЛИЩЕ ГЛАВ -->
-    <div id="chaptersData" style="display: none;">
-        
-        <div data-title="Глава 1: Встреча">
-            Однажды [ИМЯ] отправился в долгое путешествие...
-            <br><br>
-            <span class="char1">"Приветствую тебя, [ИМЯ]. Я так долго ждал этой встречи..."</span>
-        </div>
-        <div data-title="Глава 2: Темный лес">
-            Войдя в густой лес, [ИМЯ] услышал странный шорох...
-        </div>
-        <div data-title="Глава 3: Древний замок">
-            Перед глазами возвышались руины. [ИМЯ] толкнул тяжелые дубовые двери...
-        </div>
-        <div data-title="Глава 4: Испытание огнем">
-            Земля под ногами раскалилась...
-        </div>
-        <div data-title="Глава 5: Союзник или враг?">
-            На мосту стоял рыцарь в черных доспехах...
-        </div>
-        <div data-title="Глава 6: Тайна амулета">
-            Камень на шее начал светиться ярким синим светом...
-        </div>
-        <div data-title="Глава 7: Битва на вершине">
-            Ветер сбивал с ног. [ИМЯ] стоял на краю пропасти...
-        </div>
-        <div data-title="Глава 8: Рассвет">
-            Первые лучи солнца осветили горизонт...
-        </div>
-        <div data-title="Глава 9: Возвращение домой">
-            Путь был долгим, но [ИМЯ] наконец-то вернулся в родные края...
-        </div>
-
-    </div>
-
     <script>
         let currentChapter = 1;
         const totalChapters = 9;
         let userName = "";
 
+        // Названия глав (теперь они хранятся здесь, а не в HTML-блоке)
+        const chapterTitles = [
+            "Глава 1: Встреча",
+            "Глава 2: Темный лес",
+            "Глава 3: Древний замок",
+            "Глава 4: Испытание огнем",
+            "Глава 5: Союзник или враг?",
+            "Глава 6: Тайна амулета",
+            "Глава 7: Битва на вершине",
+            "Глава 8: Рассвет",
+            "Глава 9: Возвращение домой"
+        ];
+
+        // Массив ссылок на песни для каждой главы
         const chapterSongs = [
             "https://www.youtube.com/watch?v=mC9v5FaLt84&list=RDmC9v5FaLt84&start_radio=1",
             "https://www.youtube.com/watch?v=Pc4Ud2RBfQ4&list=RDPc4Ud2RBfQ4&start_radio=1",
@@ -294,12 +282,6 @@
             "https://www.youtube.com/watch?v=sElE_BfQ67s&list=RDsElE_BfQ67s&start_radio=1",
             "https://www.youtube.com/watch?v=lhfs1CzzUPM&list=RDlhfs1CzzUPM&start_radio=1"
         ];
-
-        const chapterElements = document.querySelectorAll('#chaptersData > div');
-        const chapters = Array.from(chapterElements).map(el => ({
-            title: el.getAttribute('data-title'),
-            text: el.innerHTML
-        }));
 
         const imageLeft = "https://i.ibb.co/FL9QZ9Mq/f22f98dc2927e1109b056141c184e0d0-no-bg-preview-carve-photos.png";
         const imageRight = "https://i.ibb.co/FL9QZ9Mq/f22f98dc2927e1109b056141c184e0d0-no-bg-preview-carve-photos.png";
@@ -315,18 +297,40 @@
             document.getElementById('storyContainer').style.display = 'block';
             
             currentChapter = 1;
-            renderChapter();
+            loadAndRenderChapter();
         }
 
-        function renderChapter() {
-            const chapter = chapters[currentChapter - 1];
+        // АСИНХРОННАЯ ФУНКЦИЯ ЗАГРУЗКИ ГЛАВЫ ИЗ ФАЙЛА
+        async function loadAndRenderChapter() {
+            const titleElement = document.getElementById('chapterTitle');
+            const textElement = document.getElementById('storyText');
 
-            const newTitle = chapter.title.replace(/\[ИМЯ\]/g, userName);
-            const newText = chapter.text.replace(/\[ИМЯ\]/g, userName);
+            // Показываем индикатор загрузки
+            textElement.innerHTML = "<i>Загрузка главы...</i>";
+            
+            // Заголовок берем из массива и меняем в нем имя
+            const rawTitle = chapterTitles[currentChapter - 1];
+            titleElement.innerHTML = rawTitle.replace(/\[ИМЯ\]/g, userName);
 
-            document.getElementById('chapterTitle').innerHTML = newTitle;
-            document.getElementById('storyText').innerHTML = newText;
+            // Пытаемся скачать файл (например, chapters/1.html)
+            try {
+                const response = await fetch(`chapters/${currentChapter}.html`);
+                
+                if (!response.ok) {
+                    throw new Error("Файл не найден");
+                }
+                
+                // Получаем текст из файла
+                let rawText = await response.text();
+                
+                // Заменяем имя в тексте
+                textElement.innerHTML = rawText.replace(/\[ИМЯ\]/g, userName);
 
+            } catch (error) {
+                textElement.innerHTML = `<b style="color:red;">Ошибка загрузки главы ${currentChapter}. Убедитесь, что файл chapters/${currentChapter}.html существует на GitHub.</b>`;
+            }
+
+            // Обновляем кнопки и навигацию (как раньше)
             const songUrl = chapterSongs[currentChapter - 1];
             document.getElementById('songButton').href = songUrl;
 
@@ -349,7 +353,7 @@
 
         function changeChapter(step) {
             currentChapter += step;
-            renderChapter();
+            loadAndRenderChapter(); // Теперь при смене вызываем функцию с загрузкой
         }
 
         function handleEnter(event) {
