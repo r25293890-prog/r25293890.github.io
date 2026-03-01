@@ -223,12 +223,12 @@
         /* СТИЛИ ДЛЯ КАРТИНОК В ТЕКСТЕ */
         /* ===================== */
         #storyText img {
-            width: 100%; 
-            max-width: 100%; /* Обновлено для мобилок */
-            height: auto; 
-            object-fit: contain; /* Обновлено для сохранения пропорций */
-            border-radius: 8px;
             display: block;
+            width: 100%;             /* Картинка занимает всю ширину текста */
+            max-width: 800px;        /* Но не больше 800px на больших экранах */
+            height: auto;            /* ВАЖНО: позволяет высоте подстраиваться под ширину */
+            aspect-ratio: auto;      /* Сохраняет естественные пропорции */
+            border-radius: 8px;
             margin: 30px auto; 
         }
 
@@ -333,7 +333,7 @@
             titleElement.innerHTML = rawTitle.replace(/\[ИМЯ\]/g, userName);
 
             try {
-                // ПАРАМЕТР ?t=... СБРАСЫВАЕТ КЭШ БРАУЗЕРА, ЧТОБЫ ПК ВСЕГДА ВИДЕЛ ПОЛНЫЙ ТЕКСТ
+                // Сброс кэша для надежной загрузки новых версий файлов
                 const cacheBuster = new Date().getTime();
                 const response = await fetch(`chapters/${currentChapter}.html?t=${cacheBuster}`);
                 
@@ -342,6 +342,7 @@
                 }
                 
                 let rawText = await response.text();
+                // Глобальная замена маркера имени на введенное пользователем имя
                 textElement.innerHTML = rawText.replace(/\[ИМЯ\]/g, userName);
 
             } catch (error) {
