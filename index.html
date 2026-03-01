@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Marck+Script&family=Viaoda+Libre&display=swap" rel="stylesheet">
 
     <style>
-        /* Основные стили страницы и шрифт РАССКАЗЧИКА по умолчанию */
+        /* Основные стили страницы */
         body { 
             font-family: 'Cormorant Infant', serif; 
             background: #f4f4f9; 
@@ -20,30 +20,14 @@
             padding: 20px; 
             color: #333;
             line-height: 1.6;
-            font-size: 20px; /* Сделали базовый текст чуть крупнее для читаемости */
+            font-size: 20px; 
         }
         
-        /* --- КЛАССЫ ДЛЯ ПЕРСОНАЖЕЙ --- */
-        /* Применяйте эти классы (через тег <span>) к репликам персонажей в тексте */
-        .char1 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 26px; /* Рукописные шрифты обычно нужно делать крупнее */
-            color: #2c3e50;
-        }
+        /* Шрифты персонажей */
+        .char1 { font-family: 'Great Vibes', cursive; font-size: 26px; color: #2c3e50; }
+        .char2 { font-family: 'Viaoda Libre', serif; font-size: 22px; color: #8b0000; }
+        .char3 { font-family: 'Marck Script', cursive; font-size: 24px; color: #006400; }
 
-        .char2 {
-            font-family: 'Viaoda Libre', serif;
-            font-size: 22px;
-            color: #8b0000;
-        }
-
-        .char3 {
-            font-family: 'Marck Script', cursive;
-            font-size: 24px;
-            color: #006400;
-        }
-
-        /* Белые блоки с тенью */
         .box { 
             background: white; 
             padding: 30px; 
@@ -51,14 +35,11 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
         }
 
-        /* Изначально прячем блок с историей */
-        #storyContainer {
-            display: none;
-        }
+        #storyContainer { display: none; }
 
-        /* --- СТИЛИ ДЛЯ КНОПОК --- */
+        /* Кнопки */
         button { 
-            font-family: 'Cormorant Infant', serif; /* Кнопки тоже этим шрифтом */
+            font-family: 'Cormorant Infant', serif; 
             color: white; 
             border: none; 
             padding: 12px 20px; 
@@ -69,23 +50,33 @@
             height: 46px; 
         }
         
-        /* Главная кнопка */
         .btn-main { background: #007bff; width: 100%; font-size: 20px; }
         .btn-main:hover { background: #0056b3; }
 
-        /* Кнопки навигации (Главы) */
         .btn-nav { background: #17a2b8; width: 100%; }
         .btn-nav:hover { background: #138496; }
 
-        /* Кнопка "Песня главы" */
-        .btn-song { background: #9c27b0; }
+        /* Делаем кнопку "Песня главы" ссылкой, но выглядящей как кнопка */
+        .btn-song { 
+            background: #9c27b0; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            color: white;
+            padding: 12px 20px; 
+            font-size: 18px; 
+            border-radius: 4px;
+            transition: 0.3s;
+            height: 46px; 
+            font-family: 'Cormorant Infant', serif;
+        }
         .btn-song:hover { background: #7b1fa2; }
         
-        /* Кнопка "Ввести другое имя" */
         .btn-back { background: #6c757d; }
         .btn-back:hover { background: #5a6268; }
 
-        /* Поле ввода */
         input { 
             font-family: 'Cormorant Infant', serif;
             width: calc(100% - 24px); 
@@ -98,7 +89,7 @@
         
         h2 { margin-top: 0; font-family: 'Cormorant Infant', serif; }
 
-        /* --- ВЕРСТКА БЛОКА ИСТОРИИ --- */
+        /* Верстка */
         .top-nav {
             display: flex;
             justify-content: space-between;
@@ -116,10 +107,7 @@
             align-items: center;
         }
 
-        .nav-image {
-            height: 46px; 
-            object-fit: contain;
-        }
+        .nav-image { height: 46px; object-fit: contain; }
 
         .center-buttons {
             display: flex;
@@ -137,28 +125,14 @@
             color: #222;
         }
 
-        #storyText {
-            min-height: 300px;
-        }
+        #storyText { min-height: 300px; }
 
-        /* --- НАСТРОЙКИ ДЛЯ ТЕЛЕФОНОВ --- */
         @media (max-width: 768px) {
-            .top-nav {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .center-buttons {
-                flex-direction: column;
-            }
-            .nav-slot {
-                width: 100%;
-            }
-            button {
-                width: 100%;
-            }
-            .chapter-title {
-                font-size: 28px;
-            }
+            .top-nav { flex-direction: column; align-items: stretch; }
+            .center-buttons { flex-direction: column; }
+            .nav-slot { width: 100%; }
+            button, .btn-song { width: 100%; }
+            .chapter-title { font-size: 28px; }
         }
     </style>
 </head>
@@ -178,7 +152,8 @@
             <div class="nav-slot" id="prevSlot"></div>
             
             <div class="center-buttons">
-                <button class="btn-song" onclick="playSong()">♫ Песня главы</button>
+                <!-- Теперь это ссылка, которая открывается в новой вкладке -->
+                <a href="#" class="btn-song" id="songButton" target="_blank">♫ Песня главы</a>
                 <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
             </div>
 
@@ -186,71 +161,39 @@
         </div>
 
         <div class="chapter-title" id="chapterTitle"></div>
-
         <div id="storyText"></div>
         
     </div>
 
-    <!-- 3. ХРАНИЛИЩЕ ГЛАВ (невидимое) -->
+    <!-- 3. ХРАНИЛИЩЕ ГЛАВ -->
     <div id="chaptersData" style="display: none;">
         
-        <!-- Пример использования шрифтов: используйте тег <span class="char1">...</span> для речи -->
         <div data-title="Глава 1: Встреча">
-            Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил загадочного аристократа, который вальяжно поклонился и сказал:
-            <br><br>
-            <span class="char1">"Приветствую тебя, [ИМЯ]. Я так долго ждал этой встречи... Только ты сможешь разгадать эту тайну!"</span>
-            <br><br>
-            [ИМЯ] растерянно кивнул и пошел дальше.
+            Однажды [ИМЯ] отправился в долгое путешествие...
         </div>
-
         <div data-title="Глава 2: Темный лес">
-            Войдя в густой лес, [ИМЯ] услышал странный шорох. Ветки хрустели под ногами. Внезапно из-за дерева вышел древний друид с посохом:
-            <br><br>
-            <span class="char2">"[ИМЯ], глупец... Тебе не стоит идти туда. Лес не прощает ошибок."</span>
-            <br><br>
-            Но дороги назад уже не было.
+            Войдя в густой лес, [ИМЯ] услышал странный шорох...
         </div>
-
         <div data-title="Глава 3: Древний замок">
-            Перед глазами возвышались руины. [ИМЯ] толкнул тяжелые дубовые двери. Внутри было пусто, но на столе лежало письмо. Внезапно раздался звонкий смех юной разбойницы:
-            <br><br>
-            <span class="char3">"Ха-ха! А ты и правда пришел, [ИМЯ]! Письмо-то для тебя, читай быстрее!"</span>
+            Перед глазами возвышались руины. [ИМЯ] толкнул тяжелые дубовые двери...
         </div>
-
         <div data-title="Глава 4: Испытание огнем">
-            Земля под ногами раскалилась. Чтобы пройти дальше, [ИМЯ] должен был вспомнить старое заклинание, которому его научили в детстве.
-            <br><br>
-            <span class="char1">"Не подведи меня..."</span> — пронеслось эхо в голове героя.
+            Земля под ногами раскалилась...
         </div>
-
         <div data-title="Глава 5: Союзник или враг?">
-            На мосту стоял рыцарь в черных доспехах. Он поднял меч и указал на героя.
-            <br><br>
-            <span class="char2">"Мы наконец-то встретились. Покажи, на что ты способен!"</span>
+            На мосту стоял рыцарь в черных доспехах...
         </div>
-
         <div data-title="Глава 6: Тайна амулета">
-            Камень на шее начал светиться ярким синим светом. 
-            <br><br>
-            <span class="char3">"Эй, осторожнее с этой штукой! Она может взорваться!"</span> — крикнула разбойница, прячась за камнем.
+            Камень на шее начал светиться ярким синим светом...
         </div>
-
         <div data-title="Глава 7: Битва на вершине">
-            Ветер сбивал с ног. [ИМЯ] стоял на краю пропасти, лицом к лицу со своим главным страхом.
+            Ветер сбивал с ног. [ИМЯ] стоял на краю пропасти...
         </div>
-
         <div data-title="Глава 8: Рассвет">
-            Первые лучи солнца осветили горизонт. Битва была окончена.
-            <br><br>
-            <span class="char2">"Ты доказал свою силу. Лес признает тебя."</span>
+            Первые лучи солнца осветили горизонт...
         </div>
-
         <div data-title="Глава 9: Возвращение домой">
-            Путь был долгим, но [ИМЯ] наконец-то вернулся в родные края. 
-            <br><br>
-            <span class="char1">"Наша история только начинается, друг мой..."</span>
-            <br><br>
-            Конец.
+            Путь был долгим, но [ИМЯ] наконец-то вернулся в родные края...
         </div>
 
     </div>
@@ -259,6 +202,19 @@
         let currentChapter = 1;
         const totalChapters = 9;
         let userName = "";
+
+        // Массив ссылок на песни для каждой главы
+        const chapterSongs = [
+            "https://www.youtube.com/watch?v=mC9v5FaLt84&list=RDmC9v5FaLt84&start_radio=1",
+            "https://www.youtube.com/watch?v=Pc4Ud2RBfQ4&list=RDPc4Ud2RBfQ4&start_radio=1",
+            "https://www.youtube.com/watch?v=1nPi_r5z_Mk&list=RD1nPi_r5z_Mk&start_radio=1",
+            "https://www.youtube.com/watch?v=WiinVuzh4DA&list=RDWiinVuzh4DA&start_radio=1",
+            "https://www.youtube.com/watch?v=O1OTWCd40bc&list=RDO1OTWCd40bc&start_radio=1",
+            "https://www.youtube.com/watch?v=M4ZoCHID9GI&list=RDM4ZoCHID9GI&start_radio=1",
+            "https://www.youtube.com/watch?v=39IU7ADaXmQ&list=RD39IU7ADaXmQ&start_radio=1",
+            "https://www.youtube.com/watch?v=sElE_BfQ67s&list=RDsElE_BfQ67s&start_radio=1",
+            "https://www.youtube.com/watch?v=lhfs1CzzUPM&list=RDlhfs1CzzUPM&start_radio=1"
+        ];
 
         const chapterElements = document.querySelectorAll('#chaptersData > div');
         const chapters = Array.from(chapterElements).map(el => ({
@@ -292,6 +248,10 @@
             document.getElementById('chapterTitle').innerHTML = newTitle;
             document.getElementById('storyText').innerHTML = newText;
 
+            // Обновляем ссылку на песню для текущей главы
+            const songUrl = chapterSongs[currentChapter - 1];
+            document.getElementById('songButton').href = songUrl;
+
             const prevSlot = document.getElementById('prevSlot');
             if (currentChapter === 1) {
                 prevSlot.innerHTML = `<img src="${imageLeft}" class="nav-image" alt="Декор">`;
@@ -322,10 +282,6 @@
             document.getElementById('nameInput').value = '';
             document.getElementById('inputContainer').style.display = 'block';
             document.getElementById('storyContainer').style.display = 'none';
-        }
-
-        function playSong() {
-            alert("Здесь будет включаться музыка для Главы " + currentChapter);
         }
     </script>
 
