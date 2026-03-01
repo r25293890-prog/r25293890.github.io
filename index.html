@@ -9,7 +9,7 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: #f4f4f9; 
-            max-width: 600px; 
+            max-width: 900px; /* Сделали блок шире (было 600px) */
             margin: 40px auto; 
             padding: 20px; 
             color: #333;
@@ -29,7 +29,35 @@
             display: none;
         }
 
-        /* Красивое поле ввода */
+        /* --- СТИЛИ ДЛЯ КНОПОК --- */
+        button { 
+            color: white; 
+            border: none; 
+            padding: 12px 20px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            border-radius: 4px;
+            transition: 0.3s;
+            width: 100%;
+        }
+        
+        /* Главная кнопка */
+        .btn-main { background: #007bff; }
+        .btn-main:hover { background: #0056b3; }
+
+        /* Кнопки навигации (Главы) */
+        .btn-nav { background: #17a2b8; padding: 10px 15px; font-size: 15px; }
+        .btn-nav:hover { background: #138496; }
+
+        /* Кнопка "Песня главы" (выделим ее цветом) */
+        .btn-song { background: #9c27b0; padding: 10px 15px; font-size: 15px; }
+        .btn-song:hover { background: #7b1fa2; }
+        
+        /* Кнопка "Ввести другое имя" */
+        .btn-back { background: #6c757d; }
+        .btn-back:hover { background: #5a6268; }
+
+        /* Поле ввода */
         input { 
             width: calc(100% - 24px); 
             padding: 12px; 
@@ -39,89 +67,134 @@
             border-radius: 4px;
         }
         
-        /* Кнопки */
-        button { 
-            background: #007bff; 
-            color: white; 
-            border: none; 
-            padding: 12px 24px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            border-radius: 4px;
-            width: 100%;
-            transition: 0.3s;
-        }
-        button:hover { background: #0056b3; }
-        
-        /* Серая кнопка "Назад" */
-        .btn-back {
-            background: #6c757d;
-            margin-top: 20px;
-        }
-        .btn-back:hover { background: #5a6268; }
-        
         h2 { margin-top: 0; }
+
+        /* --- ВЕРСТКА БЛОКА ИСТОРИИ --- */
+        
+        /* Верхняя панель с 3 кнопками */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Контейнер для текста (слева) и боковой кнопки (справа) */
+        .content-wrapper {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start; /* Чтобы кнопка не растягивалась в высоту */
+        }
+
+        /* Сам текст занимает всё свободное место */
+        #storyText {
+            flex: 1;
+            font-size: 17px;
+        }
+
+        /* Боковая панель имеет фиксированную ширину */
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+        }
+
+        /* --- НАСТРОЙКИ ДЛЯ ТЕЛЕФОНОВ --- */
+        @media (max-width: 768px) {
+            /* Кнопки над текстом выстраиваются в колонку */
+            .top-nav {
+                flex-direction: column;
+            }
+            /* Текст и боковая кнопка выстраиваются друг под другом */
+            .content-wrapper {
+                flex-direction: column;
+            }
+            /* Боковая панель растягивается на 100% ширины экрана */
+            .sidebar {
+                width: 100%;
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. БЛОК ВВОДА ИМЕНИ (показывается сразу) -->
+    <!-- 1. БЛОК ВВОДА ИМЕНИ -->
     <div class="box" id="inputContainer">
         <h2>Как вас зовут?</h2>
-        <!-- onkeypress позволяет нажимать Enter вместо клика мышкой -->
         <input type="text" id="nameInput" placeholder="Введите ваше имя..." onkeypress="handleEnter(event)">
-        <button onclick="showStory()">Прочитать текст</button>
+        <button class="btn-main" onclick="showStory()">Прочитать текст</button>
     </div>
 
     <!-- 2. БЛОК С ИСТОРИЕЙ (изначально невидим) -->
     <div class="box" id="storyContainer">
-        <!-- Сюда впишите свой текст с метками [ИМЯ] -->
-        <div id="storyText">
-            Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил мудреца, который сказал: "Только [ИМЯ] сможет разгадать эту тайну!" И с тех пор все знали, что [ИМЯ] — настоящий герой.
-        </div>
         
-        <!-- Кнопка чтобы начать заново -->
-        <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
+        <!-- Кнопки над текстом -->
+        <div class="top-nav">
+            <button class="btn-nav" onclick="prevChapter()">← Прошлая глава</button>
+            <button class="btn-song" onclick="playSong()">♫ Песня главы</button>
+            <button class="btn-nav" onclick="nextChapter()">Следующая глава →</button>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Сюда впишите свой текст с метками [ИМЯ] -->
+            <div id="storyText">
+                Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил мудреца, который сказал: "Только [ИМЯ] сможет разгадать эту тайну!" И с тех пор все знали, что [ИМЯ] — настоящий герой.
+                <br><br>
+                (Здесь может быть очень длинный текст главы, и кнопка "Ввести другое имя" будет аккуратно висеть с правой стороны на компьютерах, а на телефонах сама спрыгнет вниз).
+            </div>
+            
+            <!-- Боковая панель -->
+            <div class="sidebar">
+                <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
         // Сохраняем в память оригинальный текст из HTML
         const originalText = document.getElementById('storyText').innerHTML;
 
-        // Функция, которая срабатывает при нажатии "Прочитать текст"
+        // Основная функция замены имени
         function showStory() {
-            // Получаем то, что ввели в поле (убирая лишние пробелы)
             const name = document.getElementById('nameInput').value.trim();
-            
-            // Если поле пустое, выдаем предупреждение
             if (name === "") {
                 alert("Пожалуйста, введите имя!");
                 return;
             }
 
-            // Ищем все [ИМЯ] и заменяем на введенное слово
             const newText = originalText.replace(/\[ИМЯ\]/g, name);
-            
-            // Вставляем новый текст на страницу
             document.getElementById('storyText').innerHTML = newText;
 
-            // Прячем вопрос и показываем историю
             document.getElementById('inputContainer').style.display = 'none';
             document.getElementById('storyContainer').style.display = 'block';
         }
 
         // Функция для работы клавиши Enter
         function handleEnter(event) {
-            if (event.key === "Enter") {
-                showStory();
-            }
+            if (event.key === "Enter") showStory();
         }
 
-        // Функция для кнопки "Ввести другое имя"
+        // Возврат к вводу имени
         function resetStory() {
-            document.getElementById('nameInput').value = ''; // очищаем поле
-            document.getElementById('inputContainer').style.display = 'block'; // возвращаем вопрос
-            document.getElementById('storyContainer').style.display = 'none'; // прячем историю
+            document.getElementById('nameInput').value = '';
+            document.getElementById('inputContainer').style.display = 'block';
+            document.getElementById('storyContainer').style.display = 'none';
+        }
+
+        // --- ФУНКЦИИ ДЛЯ НОВЫХ КНОПОК (пока выводят просто сообщения) ---
+        function prevChapter() {
+            alert("Здесь будет переход на прошлую главу!");
+        }
+
+        function playSong() {
+            alert("Здесь будет включаться музыка!");
+        }
+
+        function nextChapter() {
+            alert("Здесь будет переход на следующую главу!");
         }
     </script>
 
