@@ -38,6 +38,7 @@
             cursor: pointer; 
             border-radius: 4px;
             transition: 0.3s;
+            height: 46px; /* Фиксируем высоту кнопок */
         }
         
         /* Главная кнопка */
@@ -45,7 +46,7 @@
         .btn-main:hover { background: #0056b3; }
 
         /* Кнопки навигации (Главы) */
-        .btn-nav { background: #17a2b8; }
+        .btn-nav { background: #17a2b8; width: 100%; }
         .btn-nav:hover { background: #138496; }
 
         /* Кнопка "Песня главы" */
@@ -79,7 +80,20 @@
             margin-bottom: 25px;
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
-            flex-wrap: wrap; /* Позволяет кнопкам переноситься на узких экранах */
+        }
+
+        /* Блоки для боковых кнопок/картинок, чтобы они занимали одинаковое место */
+        .nav-slot {
+            width: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Картинка-заглушка вместо кнопки */
+        .nav-image {
+            height: 46px; /* Такая же высота, как у кнопок */
+            object-fit: contain;
         }
 
         /* Группируем центральные кнопки вместе */
@@ -87,7 +101,7 @@
             display: flex;
             gap: 10px;
             justify-content: center;
-            flex: 1; /* Занимает доступное пространство между боковыми кнопками */
+            flex: 1; 
         }
 
         /* Название главы */
@@ -103,17 +117,20 @@
         /* Сам текст */
         #storyText {
             font-size: 17px;
+            min-height: 300px;
         }
 
         /* --- НАСТРОЙКИ ДЛЯ ТЕЛЕФОНОВ --- */
         @media (max-width: 768px) {
-            /* Кнопки над текстом выстраиваются в колонку */
             .top-nav {
                 flex-direction: column;
                 align-items: stretch;
             }
             .center-buttons {
                 flex-direction: column;
+            }
+            .nav-slot {
+                width: 100%;
             }
             button {
                 width: 100%;
@@ -130,87 +147,160 @@
     <div class="box" id="inputContainer">
         <h2>Как вас зовут?</h2>
         <input type="text" id="nameInput" placeholder="Введите ваше имя..." onkeypress="handleEnter(event)">
-        <button class="btn-main" onclick="showStory()">Прочитать текст</button>
+        <button class="btn-main" onclick="startStory()">Прочитать текст</button>
     </div>
 
-    <!-- 2. БЛОК С ИСТОРИЕЙ (изначально невидим) -->
+    <!-- 2. БЛОК С ИСТОРИЕЙ -->
     <div class="box" id="storyContainer">
         
         <!-- Кнопки над текстом -->
         <div class="top-nav">
-            <button class="btn-nav" onclick="prevChapter()">← Прошлая глава</button>
+            <!-- Место для левой кнопки или картинки -->
+            <div class="nav-slot" id="prevSlot"></div>
             
+            <!-- Центральные кнопки -->
             <div class="center-buttons">
                 <button class="btn-song" onclick="playSong()">♫ Песня главы</button>
                 <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
             </div>
 
-            <button class="btn-nav" onclick="nextChapter()">Следующая глава →</button>
+            <!-- Место для правой кнопки или картинки -->
+            <div class="nav-slot" id="nextSlot"></div>
         </div>
 
         <!-- Название главы -->
-        <div class="chapter-title" id="chapterTitle">
-            Глава 1: Встреча с Мудрецом
-        </div>
+        <div class="chapter-title" id="chapterTitle"></div>
 
-        <!-- Сюда впишите свой текст с метками [ИМЯ] -->
-        <div id="storyText">
-            Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил мудреца, который сказал: "Только [ИМЯ] сможет разгадать эту тайну!" И с тех пор все знали, что [ИМЯ] — настоящий герой.
-            <br><br>
-            (Здесь может быть очень длинный текст главы. Имя [ИМЯ] автоматически подставится во все нужные места.)
-        </div>
+        <!-- Текст главы -->
+        <div id="storyText"></div>
         
     </div>
 
-    <script>
-        // Сохраняем в память оригинальный текст из HTML
-        const originalText = document.getElementById('storyText').innerHTML;
-        const originalTitle = document.getElementById('chapterTitle').innerHTML;
+    <!-- 3. ХРАНИЛИЩЕ ГЛАВ (невидимое) -->
+    <!-- Здесь вы можете менять названия в data-title="..." и текст внутри <div> -->
+    <div id="chaptersData" style="display: none;">
+        
+        <div data-title="Глава 1: Встреча">
+            Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил мудреца, который сказал: "Только [ИМЯ] сможет разгадать эту тайну!"
+        </div>
 
-        // Основная функция замены имени
-        function showStory() {
-            const name = document.getElementById('nameInput').value.trim();
-            if (name === "") {
+        <div data-title="Глава 2: Темный лес">
+            Войдя в густой лес, [ИМЯ] услышал странный шорох. Ветки хрустели под ногами. "[ИМЯ], тебе не стоит идти туда", — прошептал голос из темноты.
+        </div>
+
+        <div data-title="Глава 3: Древний замок">
+            Перед глазами возвышались руины. [ИМЯ] толкнул тяжелые дубовые двери. Внутри было пусто, но на столе лежало письмо, адресованное именно ему: "Для [ИМЯ]".
+        </div>
+
+        <div data-title="Глава 4: Испытание огнем">
+            Земля под ногами раскалилась. Чтобы пройти дальше, [ИМЯ] должен был вспомнить старое заклинание, которому его научили в детстве.
+        </div>
+
+        <div data-title="Глава 5: Союзник или враг?">
+            На мосту стоял рыцарь в черных доспехах. Он поднял меч и указал на героя: "[ИМЯ], мы наконец-то встретились!"
+        </div>
+
+        <div data-title="Глава 6: Тайна амулета">
+            Камень на шее начал светиться ярким синим светом. [ИМЯ] почувствовал, как древняя магия наполняет его тело новыми силами.
+        </div>
+
+        <div data-title="Глава 7: Битва на вершине">
+            Ветер сбивал с ног. [ИМЯ] стоял на краю пропасти, лицом к лицу со своим главным страхом. Отступать было некуда.
+        </div>
+
+        <div data-title="Глава 8: Рассвет">
+            Первые лучи солнца осветили горизонт. Битва была окончена. Все скандировали: "Слава герою! Слава [ИМЯ]!"
+        </div>
+
+        <div data-title="Глава 9: Возвращение домой">
+            Путь был долгим, но [ИМЯ] наконец-то вернулся в родные края. Эта история навсегда останется в памяти поколений. Конец.
+        </div>
+
+    </div>
+
+    <script>
+        let currentChapter = 1;
+        const totalChapters = 9;
+        let userName = "";
+
+        // Собираем все главы из скрытого HTML при загрузке страницы
+        const chapterElements = document.querySelectorAll('#chaptersData > div');
+        const chapters = Array.from(chapterElements).map(el => ({
+            title: el.getAttribute('data-title'),
+            text: el.innerHTML
+        }));
+
+        // Ссылки на картинки-заглушки (можете поменять на свои)
+        const imageLeft = "https://i.ibb.co/FL9QZ9Mq/f22f98dc2927e1109b056141c184e0d0-no-bg-preview-carve-photos.png";
+        const imageRight = "https://i.ibb.co/FL9QZ9Mq/f22f98dc2927e1109b056141c184e0d0-no-bg-preview-carve-photos.png";
+
+        function startStory() {
+            userName = document.getElementById('nameInput').value.trim();
+            if (userName === "") {
                 alert("Пожалуйста, введите имя!");
                 return;
             }
 
-            // Заменяем имя в самом тексте
-            const newText = originalText.replace(/\[ИМЯ\]/g, name);
-            document.getElementById('storyText').innerHTML = newText;
-
-            // Заменяем имя в заголовке
-            const newTitle = originalTitle.replace(/\[ИМЯ\]/g, name);
-            document.getElementById('chapterTitle').innerHTML = newTitle;
-
-            // Показываем/прячем блоки
             document.getElementById('inputContainer').style.display = 'none';
             document.getElementById('storyContainer').style.display = 'block';
+            
+            // Запускаем первую главу
+            currentChapter = 1;
+            renderChapter();
         }
 
-        // Функция для работы клавиши Enter
+        function renderChapter() {
+            // Берем нужную главу (индекс в массиве на 1 меньше номера главы)
+            const chapter = chapters[currentChapter - 1];
+
+            // Подставляем имя в заголовок и текст
+            const newTitle = chapter.title.replace(/\[ИМЯ\]/g, userName);
+            const newText = chapter.text.replace(/\[ИМЯ\]/g, userName);
+
+            document.getElementById('chapterTitle').innerHTML = newTitle;
+            document.getElementById('storyText').innerHTML = newText;
+
+            // Настраиваем левую кнопку (или картинку)
+            const prevSlot = document.getElementById('prevSlot');
+            if (currentChapter === 1) {
+                // На первой главе показываем картинку
+                prevSlot.innerHTML = `<img src="${imageLeft}" class="nav-image" alt="Декор">`;
+            } else {
+                // На остальных - кнопку
+                prevSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(-1)">← Прошлая глава</button>`;
+            }
+
+            // Настраиваем правую кнопку (или картинку)
+            const nextSlot = document.getElementById('nextSlot');
+            if (currentChapter === totalChapters) {
+                // На последней (9) главе показываем картинку
+                nextSlot.innerHTML = `<img src="${imageRight}" class="nav-image" alt="Декор">`;
+            } else {
+                // На остальных - кнопку
+                nextSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(1)">Следующая глава →</button>`;
+            }
+
+            // Прокручиваем страницу наверх при смене главы
+            window.scrollTo(0, 0);
+        }
+
+        function changeChapter(step) {
+            currentChapter += step;
+            renderChapter();
+        }
+
         function handleEnter(event) {
-            if (event.key === "Enter") showStory();
+            if (event.key === "Enter") startStory();
         }
 
-        // Возврат к вводу имени
         function resetStory() {
             document.getElementById('nameInput').value = '';
             document.getElementById('inputContainer').style.display = 'block';
             document.getElementById('storyContainer').style.display = 'none';
         }
 
-        // --- ФУНКЦИИ ДЛЯ КНОПОК НАВИГАЦИИ ---
-        function prevChapter() {
-            alert("Здесь будет переход на прошлую главу!");
-        }
-
         function playSong() {
-            alert("Здесь будет включаться музыка!");
-        }
-
-        function nextChapter() {
-            alert("Здесь будет переход на следующую главу!");
+            alert("Здесь будет включаться музыка для Главы " + currentChapter);
         }
     </script>
 
