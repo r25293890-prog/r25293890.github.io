@@ -122,11 +122,13 @@
         .btn-back:hover { background: #c2a275; }
 
         /* ===================== */
-        /* КНОПКА ТЕЛЕГРАМ       */
+        /* НИЖНЯЯ ПАНЕЛЬ С КНОПКАМИ */
         /* ===================== */
-        .tg-link-container {
+        .bottom-nav {
             display: flex;
             justify-content: center;
+            align-items: center;
+            gap: 20px;
             margin-top: 40px;
             padding-top: 20px;
             border-top: 1px dashed #7B674D;
@@ -145,6 +147,19 @@
         .tg-image-btn:hover {
             transform: scale(1.05); 
             filter: brightness(1.1); 
+        }
+        
+        .btn-next-bottom {
+            background: #633F0F; 
+            height: 80px; /* Чтобы была одной высоты с кнопкой ТГ */
+            font-size: 22px;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-next-bottom:hover {
+            background: #4a2e0a;
         }
 
         input { 
@@ -200,12 +215,12 @@
         
         /* Стили для картинок ВНУТРИ текста главы */
         #storyText img {
-            width: 100%; /* Картинка теперь будет занимать всю доступную ширину текстового блока */
-            max-width: 800px; /* Ограничение, чтобы не была огромной на очень больших экранах */
-            height: auto; /* Сохраняем пропорции */
+            width: 100%; 
+            max-width: 800px; 
+            height: auto; 
             border-radius: 8px;
             display: block;
-            margin: 30px auto; /* Чуть больше отступы сверху и снизу от текста */
+            margin: 30px auto; 
         }
 
         @media (max-width: 768px) {
@@ -214,7 +229,9 @@
             .nav-slot { width: 100%; }
             button, .btn-song { width: 100%; }
             .chapter-title { font-size: 34px; }
+            .bottom-nav { flex-direction: column; gap: 15px; }
             .tg-image-btn img { height: 60px; } 
+            .btn-next-bottom { height: 60px; width: 100%; }
         }
     </style>
 </head>
@@ -244,11 +261,12 @@
         <div class="chapter-title" id="chapterTitle"></div>
         <div id="storyText">Загрузка...</div>
         
-        <!-- КНОПКА ТЕЛЕГРАМ -->
-        <div class="tg-link-container">
+        <!-- НИЖНЯЯ ПАНЕЛЬ -->
+        <div class="bottom-nav" id="bottomNav">
             <a href="https://t.me/MerkhavSed" target="_blank" class="tg-image-btn" title="Перейти в Telegram">
                 <img src="https://i.ibb.co/m5V3cFQD/2026-03-01-234222464-no-bg-preview-carve-photos.png" alt="Telegram Channel">
             </a>
+            <button class="btn-next-bottom" id="bottomNextBtn" onclick="changeChapter(1)">Следующая глава →</button>
         </div>
         
     </div>
@@ -258,7 +276,7 @@
         const totalChapters = 9;
         let userName = "";
 
-        // Названия глав (теперь они хранятся здесь, а не в HTML-блоке)
+        // Названия глав 
         const chapterTitles = [
             "Глава 1: Встреча",
             "Глава 2: Темный лес",
@@ -271,7 +289,7 @@
             "Глава 9: Возвращение домой"
         ];
 
-        // Массив ссылок на песни для каждой главы
+        // Массив ссылок на песни 
         const chapterSongs = [
             "https://www.youtube.com/watch?v=mC9v5FaLt84&list=RDmC9v5FaLt84&start_radio=1",
             "https://www.youtube.com/watch?v=Pc4Ud2RBfQ4&list=RDPc4Ud2RBfQ4&start_radio=1",
@@ -306,67 +324,4 @@
             const titleElement = document.getElementById('chapterTitle');
             const textElement = document.getElementById('storyText');
 
-            // Показываем индикатор загрузки
-            textElement.innerHTML = "<i>Загрузка главы...</i>";
-            
-            // Заголовок берем из массива и меняем в нем имя
-            const rawTitle = chapterTitles[currentChapter - 1];
-            titleElement.innerHTML = rawTitle.replace(/\[ИМЯ\]/g, userName);
-
-            // Пытаемся скачать файл (например, chapters/1.html)
-            try {
-                const response = await fetch(`chapters/${currentChapter}.html`);
-                
-                if (!response.ok) {
-                    throw new Error("Файл не найден");
-                }
-                
-                // Получаем текст из файла
-                let rawText = await response.text();
-                
-                // Заменяем имя в тексте
-                textElement.innerHTML = rawText.replace(/\[ИМЯ\]/g, userName);
-
-            } catch (error) {
-                textElement.innerHTML = `<b style="color:red;">Ошибка загрузки главы ${currentChapter}. Убедитесь, что файл chapters/${currentChapter}.html существует на GitHub.</b>`;
-            }
-
-            // Обновляем кнопки и навигацию (как раньше)
-            const songUrl = chapterSongs[currentChapter - 1];
-            document.getElementById('songButton').href = songUrl;
-
-            const prevSlot = document.getElementById('prevSlot');
-            if (currentChapter === 1) {
-                prevSlot.innerHTML = `<img src="${imageLeft}" class="nav-image" alt="Декор">`;
-            } else {
-                prevSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(-1)">← Прошлая глава</button>`;
-            }
-
-            const nextSlot = document.getElementById('nextSlot');
-            if (currentChapter === totalChapters) {
-                nextSlot.innerHTML = `<img src="${imageRight}" class="nav-image" alt="Декор">`;
-            } else {
-                nextSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(1)">Следующая глава →</button>`;
-            }
-
-            window.scrollTo(0, 0);
-        }
-
-        function changeChapter(step) {
-            currentChapter += step;
-            loadAndRenderChapter(); // Теперь при смене вызываем функцию с загрузкой
-        }
-
-        function handleEnter(event) {
-            if (event.key === "Enter") startStory();
-        }
-
-        function resetStory() {
-            document.getElementById('nameInput').value = '';
-            document.getElementById('inputContainer').style.display = 'block';
-            document.getElementById('storyContainer').style.display = 'none';
-        }
-    </script>
-
-</body>
-</html>
+            //
