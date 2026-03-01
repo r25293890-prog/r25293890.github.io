@@ -200,11 +200,12 @@
         
         /* Стили для картинок ВНУТРИ текста главы */
         #storyText img {
-            max-width: 100%;
-            height: auto;
+            width: 100%; /* Картинка теперь будет занимать всю доступную ширину текстового блока */
+            max-width: 800px; /* Ограничение, чтобы не была огромной на очень больших экранах */
+            height: auto; /* Сохраняем пропорции */
             border-radius: 8px;
             display: block;
-            margin: 20px auto;
+            margin: 30px auto; /* Чуть больше отступы сверху и снизу от текста */
         }
 
         @media (max-width: 768px) {
@@ -331,41 +332,4 @@
             }
 
             // Обновляем кнопки и навигацию (как раньше)
-            const songUrl = chapterSongs[currentChapter - 1];
-            document.getElementById('songButton').href = songUrl;
-
-            const prevSlot = document.getElementById('prevSlot');
-            if (currentChapter === 1) {
-                prevSlot.innerHTML = `<img src="${imageLeft}" class="nav-image" alt="Декор">`;
-            } else {
-                prevSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(-1)">← Прошлая глава</button>`;
-            }
-
-            const nextSlot = document.getElementById('nextSlot');
-            if (currentChapter === totalChapters) {
-                nextSlot.innerHTML = `<img src="${imageRight}" class="nav-image" alt="Декор">`;
-            } else {
-                nextSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(1)">Следующая глава →</button>`;
-            }
-
-            window.scrollTo(0, 0);
-        }
-
-        function changeChapter(step) {
-            currentChapter += step;
-            loadAndRenderChapter(); // Теперь при смене вызываем функцию с загрузкой
-        }
-
-        function handleEnter(event) {
-            if (event.key === "Enter") startStory();
-        }
-
-        function resetStory() {
-            document.getElementById('nameInput').value = '';
-            document.getElementById('inputContainer').style.display = 'block';
-            document.getElementById('storyContainer').style.display = 'none';
-        }
-    </script>
-
-</body>
-</html>
+            const songUrl
