@@ -9,7 +9,7 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background: #f4f4f9; 
-            max-width: 900px; /* Сделали блок шире (было 600px) */
+            max-width: 900px; 
             margin: 40px auto; 
             padding: 20px; 
             color: #333;
@@ -34,23 +34,22 @@
             color: white; 
             border: none; 
             padding: 12px 20px; 
-            font-size: 16px; 
+            font-size: 15px; 
             cursor: pointer; 
             border-radius: 4px;
             transition: 0.3s;
-            width: 100%;
         }
         
         /* Главная кнопка */
-        .btn-main { background: #007bff; }
+        .btn-main { background: #007bff; width: 100%; font-size: 16px; }
         .btn-main:hover { background: #0056b3; }
 
         /* Кнопки навигации (Главы) */
-        .btn-nav { background: #17a2b8; padding: 10px 15px; font-size: 15px; }
+        .btn-nav { background: #17a2b8; }
         .btn-nav:hover { background: #138496; }
 
-        /* Кнопка "Песня главы" (выделим ее цветом) */
-        .btn-song { background: #9c27b0; padding: 10px 15px; font-size: 15px; }
+        /* Кнопка "Песня главы" */
+        .btn-song { background: #9c27b0; }
         .btn-song:hover { background: #7b1fa2; }
         
         /* Кнопка "Ввести другое имя" */
@@ -71,33 +70,39 @@
 
         /* --- ВЕРСТКА БЛОКА ИСТОРИИ --- */
         
-        /* Верхняя панель с 3 кнопками */
+        /* Верхняя панель с кнопками */
         .top-nav {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            align-items: center;
+            gap: 15px;
             margin-bottom: 25px;
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
+            flex-wrap: wrap; /* Позволяет кнопкам переноситься на узких экранах */
         }
 
-        /* Контейнер для текста (слева) и боковой кнопки (справа) */
-        .content-wrapper {
+        /* Группируем центральные кнопки вместе */
+        .center-buttons {
             display: flex;
-            gap: 30px;
-            align-items: flex-start; /* Чтобы кнопка не растягивалась в высоту */
+            gap: 10px;
+            justify-content: center;
+            flex: 1; /* Занимает доступное пространство между боковыми кнопками */
         }
 
-        /* Сам текст занимает всё свободное место */
+        /* Название главы */
+        .chapter-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        /* Сам текст */
         #storyText {
-            flex: 1;
             font-size: 17px;
-        }
-
-        /* Боковая панель имеет фиксированную ширину */
-        .sidebar {
-            width: 220px;
-            flex-shrink: 0;
         }
 
         /* --- НАСТРОЙКИ ДЛЯ ТЕЛЕФОНОВ --- */
@@ -105,15 +110,16 @@
             /* Кнопки над текстом выстраиваются в колонку */
             .top-nav {
                 flex-direction: column;
+                align-items: stretch;
             }
-            /* Текст и боковая кнопка выстраиваются друг под другом */
-            .content-wrapper {
+            .center-buttons {
                 flex-direction: column;
             }
-            /* Боковая панель растягивается на 100% ширины экрана */
-            .sidebar {
+            button {
                 width: 100%;
-                margin-top: 20px;
+            }
+            .chapter-title {
+                font-size: 24px;
             }
         }
     </style>
@@ -133,29 +139,33 @@
         <!-- Кнопки над текстом -->
         <div class="top-nav">
             <button class="btn-nav" onclick="prevChapter()">← Прошлая глава</button>
-            <button class="btn-song" onclick="playSong()">♫ Песня главы</button>
+            
+            <div class="center-buttons">
+                <button class="btn-song" onclick="playSong()">♫ Песня главы</button>
+                <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
+            </div>
+
             <button class="btn-nav" onclick="nextChapter()">Следующая глава →</button>
         </div>
 
-        <div class="content-wrapper">
-            <!-- Сюда впишите свой текст с метками [ИМЯ] -->
-            <div id="storyText">
-                Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил мудреца, который сказал: "Только [ИМЯ] сможет разгадать эту тайну!" И с тех пор все знали, что [ИМЯ] — настоящий герой.
-                <br><br>
-                (Здесь может быть очень длинный текст главы, и кнопка "Ввести другое имя" будет аккуратно висеть с правой стороны на компьютерах, а на телефонах сама спрыгнет вниз).
-            </div>
-            
-            <!-- Боковая панель -->
-            <div class="sidebar">
-                <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
-            </div>
+        <!-- Название главы -->
+        <div class="chapter-title" id="chapterTitle">
+            Глава 1: Встреча с Мудрецом
         </div>
 
+        <!-- Сюда впишите свой текст с метками [ИМЯ] -->
+        <div id="storyText">
+            Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил мудреца, который сказал: "Только [ИМЯ] сможет разгадать эту тайну!" И с тех пор все знали, что [ИМЯ] — настоящий герой.
+            <br><br>
+            (Здесь может быть очень длинный текст главы. Имя [ИМЯ] автоматически подставится во все нужные места.)
+        </div>
+        
     </div>
 
     <script>
         // Сохраняем в память оригинальный текст из HTML
         const originalText = document.getElementById('storyText').innerHTML;
+        const originalTitle = document.getElementById('chapterTitle').innerHTML;
 
         // Основная функция замены имени
         function showStory() {
@@ -165,9 +175,15 @@
                 return;
             }
 
+            // Заменяем имя в самом тексте
             const newText = originalText.replace(/\[ИМЯ\]/g, name);
             document.getElementById('storyText').innerHTML = newText;
 
+            // Заменяем имя в заголовке
+            const newTitle = originalTitle.replace(/\[ИМЯ\]/g, name);
+            document.getElementById('chapterTitle').innerHTML = newTitle;
+
+            // Показываем/прячем блоки
             document.getElementById('inputContainer').style.display = 'none';
             document.getElementById('storyContainer').style.display = 'block';
         }
@@ -184,7 +200,7 @@
             document.getElementById('storyContainer').style.display = 'none';
         }
 
-        // --- ФУНКЦИИ ДЛЯ НОВЫХ КНОПОК (пока выводят просто сообщения) ---
+        // --- ФУНКЦИИ ДЛЯ КНОПОК НАВИГАЦИИ ---
         function prevChapter() {
             alert("Здесь будет переход на прошлую главу!");
         }
