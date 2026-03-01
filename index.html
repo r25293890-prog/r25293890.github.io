@@ -4,18 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Моя история</title>
+    
+    <!-- Подключение шрифтов из Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Marck+Script&family=Viaoda+Libre&display=swap" rel="stylesheet">
+
     <style>
-        /* Основные стили страницы */
+        /* Основные стили страницы и шрифт РАССКАЗЧИКА по умолчанию */
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Cormorant Infant', serif; 
             background: #f4f4f9; 
             max-width: 900px; 
             margin: 40px auto; 
             padding: 20px; 
             color: #333;
             line-height: 1.6;
+            font-size: 20px; /* Сделали базовый текст чуть крупнее для читаемости */
         }
         
+        /* --- КЛАССЫ ДЛЯ ПЕРСОНАЖЕЙ --- */
+        /* Применяйте эти классы (через тег <span>) к репликам персонажей в тексте */
+        .char1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 26px; /* Рукописные шрифты обычно нужно делать крупнее */
+            color: #2c3e50;
+        }
+
+        .char2 {
+            font-family: 'Viaoda Libre', serif;
+            font-size: 22px;
+            color: #8b0000;
+        }
+
+        .char3 {
+            font-family: 'Marck Script', cursive;
+            font-size: 24px;
+            color: #006400;
+        }
+
         /* Белые блоки с тенью */
         .box { 
             background: white; 
@@ -31,18 +58,19 @@
 
         /* --- СТИЛИ ДЛЯ КНОПОК --- */
         button { 
+            font-family: 'Cormorant Infant', serif; /* Кнопки тоже этим шрифтом */
             color: white; 
             border: none; 
             padding: 12px 20px; 
-            font-size: 15px; 
+            font-size: 18px; 
             cursor: pointer; 
             border-radius: 4px;
             transition: 0.3s;
-            height: 46px; /* Фиксируем высоту кнопок */
+            height: 46px; 
         }
         
         /* Главная кнопка */
-        .btn-main { background: #007bff; width: 100%; font-size: 16px; }
+        .btn-main { background: #007bff; width: 100%; font-size: 20px; }
         .btn-main:hover { background: #0056b3; }
 
         /* Кнопки навигации (Главы) */
@@ -59,19 +87,18 @@
 
         /* Поле ввода */
         input { 
+            font-family: 'Cormorant Infant', serif;
             width: calc(100% - 24px); 
             padding: 12px; 
             margin-bottom: 20px; 
-            font-size: 16px; 
+            font-size: 18px; 
             border: 1px solid #ccc;
             border-radius: 4px;
         }
         
-        h2 { margin-top: 0; }
+        h2 { margin-top: 0; font-family: 'Cormorant Infant', serif; }
 
         /* --- ВЕРСТКА БЛОКА ИСТОРИИ --- */
-        
-        /* Верхняя панель с кнопками */
         .top-nav {
             display: flex;
             justify-content: space-between;
@@ -82,7 +109,6 @@
             border-bottom: 1px solid #eee;
         }
 
-        /* Блоки для боковых кнопок/картинок, чтобы они занимали одинаковое место */
         .nav-slot {
             width: 180px;
             display: flex;
@@ -90,13 +116,11 @@
             align-items: center;
         }
 
-        /* Картинка-заглушка вместо кнопки */
         .nav-image {
-            height: 46px; /* Такая же высота, как у кнопок */
+            height: 46px; 
             object-fit: contain;
         }
 
-        /* Группируем центральные кнопки вместе */
         .center-buttons {
             display: flex;
             gap: 10px;
@@ -104,19 +128,16 @@
             flex: 1; 
         }
 
-        /* Название главы */
         .chapter-title {
             text-align: center;
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             margin-top: 10px;
             margin-bottom: 30px;
             color: #222;
         }
 
-        /* Сам текст */
         #storyText {
-            font-size: 17px;
             min-height: 300px;
         }
 
@@ -136,7 +157,7 @@
                 width: 100%;
             }
             .chapter-title {
-                font-size: 24px;
+                font-size: 28px;
             }
         }
     </style>
@@ -153,67 +174,83 @@
     <!-- 2. БЛОК С ИСТОРИЕЙ -->
     <div class="box" id="storyContainer">
         
-        <!-- Кнопки над текстом -->
         <div class="top-nav">
-            <!-- Место для левой кнопки или картинки -->
             <div class="nav-slot" id="prevSlot"></div>
             
-            <!-- Центральные кнопки -->
             <div class="center-buttons">
                 <button class="btn-song" onclick="playSong()">♫ Песня главы</button>
                 <button class="btn-back" onclick="resetStory()">Ввести другое имя</button>
             </div>
 
-            <!-- Место для правой кнопки или картинки -->
             <div class="nav-slot" id="nextSlot"></div>
         </div>
 
-        <!-- Название главы -->
         <div class="chapter-title" id="chapterTitle"></div>
 
-        <!-- Текст главы -->
         <div id="storyText"></div>
         
     </div>
 
     <!-- 3. ХРАНИЛИЩЕ ГЛАВ (невидимое) -->
-    <!-- Здесь вы можете менять названия в data-title="..." и текст внутри <div> -->
     <div id="chaptersData" style="display: none;">
         
+        <!-- Пример использования шрифтов: используйте тег <span class="char1">...</span> для речи -->
         <div data-title="Глава 1: Встреча">
-            Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил мудреца, который сказал: "Только [ИМЯ] сможет разгадать эту тайну!"
+            Однажды [ИМЯ] отправился в долгое путешествие. По пути [ИМЯ] встретил загадочного аристократа, который вальяжно поклонился и сказал:
+            <br><br>
+            <span class="char1">"Приветствую тебя, [ИМЯ]. Я так долго ждал этой встречи... Только ты сможешь разгадать эту тайну!"</span>
+            <br><br>
+            [ИМЯ] растерянно кивнул и пошел дальше.
         </div>
 
         <div data-title="Глава 2: Темный лес">
-            Войдя в густой лес, [ИМЯ] услышал странный шорох. Ветки хрустели под ногами. "[ИМЯ], тебе не стоит идти туда", — прошептал голос из темноты.
+            Войдя в густой лес, [ИМЯ] услышал странный шорох. Ветки хрустели под ногами. Внезапно из-за дерева вышел древний друид с посохом:
+            <br><br>
+            <span class="char2">"[ИМЯ], глупец... Тебе не стоит идти туда. Лес не прощает ошибок."</span>
+            <br><br>
+            Но дороги назад уже не было.
         </div>
 
         <div data-title="Глава 3: Древний замок">
-            Перед глазами возвышались руины. [ИМЯ] толкнул тяжелые дубовые двери. Внутри было пусто, но на столе лежало письмо, адресованное именно ему: "Для [ИМЯ]".
+            Перед глазами возвышались руины. [ИМЯ] толкнул тяжелые дубовые двери. Внутри было пусто, но на столе лежало письмо. Внезапно раздался звонкий смех юной разбойницы:
+            <br><br>
+            <span class="char3">"Ха-ха! А ты и правда пришел, [ИМЯ]! Письмо-то для тебя, читай быстрее!"</span>
         </div>
 
         <div data-title="Глава 4: Испытание огнем">
             Земля под ногами раскалилась. Чтобы пройти дальше, [ИМЯ] должен был вспомнить старое заклинание, которому его научили в детстве.
+            <br><br>
+            <span class="char1">"Не подведи меня..."</span> — пронеслось эхо в голове героя.
         </div>
 
         <div data-title="Глава 5: Союзник или враг?">
-            На мосту стоял рыцарь в черных доспехах. Он поднял меч и указал на героя: "[ИМЯ], мы наконец-то встретились!"
+            На мосту стоял рыцарь в черных доспехах. Он поднял меч и указал на героя.
+            <br><br>
+            <span class="char2">"Мы наконец-то встретились. Покажи, на что ты способен!"</span>
         </div>
 
         <div data-title="Глава 6: Тайна амулета">
-            Камень на шее начал светиться ярким синим светом. [ИМЯ] почувствовал, как древняя магия наполняет его тело новыми силами.
+            Камень на шее начал светиться ярким синим светом. 
+            <br><br>
+            <span class="char3">"Эй, осторожнее с этой штукой! Она может взорваться!"</span> — крикнула разбойница, прячась за камнем.
         </div>
 
         <div data-title="Глава 7: Битва на вершине">
-            Ветер сбивал с ног. [ИМЯ] стоял на краю пропасти, лицом к лицу со своим главным страхом. Отступать было некуда.
+            Ветер сбивал с ног. [ИМЯ] стоял на краю пропасти, лицом к лицу со своим главным страхом.
         </div>
 
         <div data-title="Глава 8: Рассвет">
-            Первые лучи солнца осветили горизонт. Битва была окончена. Все скандировали: "Слава герою! Слава [ИМЯ]!"
+            Первые лучи солнца осветили горизонт. Битва была окончена.
+            <br><br>
+            <span class="char2">"Ты доказал свою силу. Лес признает тебя."</span>
         </div>
 
         <div data-title="Глава 9: Возвращение домой">
-            Путь был долгим, но [ИМЯ] наконец-то вернулся в родные края. Эта история навсегда останется в памяти поколений. Конец.
+            Путь был долгим, но [ИМЯ] наконец-то вернулся в родные края. 
+            <br><br>
+            <span class="char1">"Наша история только начинается, друг мой..."</span>
+            <br><br>
+            Конец.
         </div>
 
     </div>
@@ -223,14 +260,12 @@
         const totalChapters = 9;
         let userName = "";
 
-        // Собираем все главы из скрытого HTML при загрузке страницы
         const chapterElements = document.querySelectorAll('#chaptersData > div');
         const chapters = Array.from(chapterElements).map(el => ({
             title: el.getAttribute('data-title'),
             text: el.innerHTML
         }));
 
-        // Ссылки на картинки-заглушки (можете поменять на свои)
         const imageLeft = "https://i.ibb.co/FL9QZ9Mq/f22f98dc2927e1109b056141c184e0d0-no-bg-preview-carve-photos.png";
         const imageRight = "https://i.ibb.co/FL9QZ9Mq/f22f98dc2927e1109b056141c184e0d0-no-bg-preview-carve-photos.png";
 
@@ -244,43 +279,33 @@
             document.getElementById('inputContainer').style.display = 'none';
             document.getElementById('storyContainer').style.display = 'block';
             
-            // Запускаем первую главу
             currentChapter = 1;
             renderChapter();
         }
 
         function renderChapter() {
-            // Берем нужную главу (индекс в массиве на 1 меньше номера главы)
             const chapter = chapters[currentChapter - 1];
 
-            // Подставляем имя в заголовок и текст
             const newTitle = chapter.title.replace(/\[ИМЯ\]/g, userName);
             const newText = chapter.text.replace(/\[ИМЯ\]/g, userName);
 
             document.getElementById('chapterTitle').innerHTML = newTitle;
             document.getElementById('storyText').innerHTML = newText;
 
-            // Настраиваем левую кнопку (или картинку)
             const prevSlot = document.getElementById('prevSlot');
             if (currentChapter === 1) {
-                // На первой главе показываем картинку
                 prevSlot.innerHTML = `<img src="${imageLeft}" class="nav-image" alt="Декор">`;
             } else {
-                // На остальных - кнопку
                 prevSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(-1)">← Прошлая глава</button>`;
             }
 
-            // Настраиваем правую кнопку (или картинку)
             const nextSlot = document.getElementById('nextSlot');
             if (currentChapter === totalChapters) {
-                // На последней (9) главе показываем картинку
                 nextSlot.innerHTML = `<img src="${imageRight}" class="nav-image" alt="Декор">`;
             } else {
-                // На остальных - кнопку
                 nextSlot.innerHTML = `<button class="btn-nav" onclick="changeChapter(1)">Следующая глава →</button>`;
             }
 
-            // Прокручиваем страницу наверх при смене главы
             window.scrollTo(0, 0);
         }
 
